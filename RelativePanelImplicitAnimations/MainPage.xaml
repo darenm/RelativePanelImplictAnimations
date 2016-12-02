@@ -73,13 +73,13 @@
                                  Height="900"
                                  Margin="12" >
                 <Interactivity:Interaction.Behaviors>
-                    <local:SizeAndOffsetImplicitAnimationBehavior/>
+                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300"/>
                 </Interactivity:Interaction.Behaviors>
             </local:VisualControl>
 
             <ScrollViewer x:Name="CommentsScrollviewer">
                 <Interactivity:Interaction.Behaviors>
-                    <local:SizeAndOffsetImplicitAnimationBehavior/>
+                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300"/>
                 </Interactivity:Interaction.Behaviors>
                 <StackPanel Background="Azure">
                     <TextBlock x:Name="FirstNameLabel"
