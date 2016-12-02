@@ -14,18 +14,29 @@ namespace RelativePanelImplicitAnimations
         public static readonly DependencyProperty ImageUriProperty = DependencyProperty.Register(
             "ImageUri", typeof(Uri), typeof(VisualControl), new PropertyMetadata(default(Uri), ImageUriChanged));
 
+        private static SurfaceFactory _surfaceFactoryInstance;
+
         private readonly Compositor _compositor;
+        private UriSurface _uriSurface;
 
         public VisualControl()
         {
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             Visual = _compositor.CreateSpriteVisual();
+
+            if (_surfaceFactoryInstance != null)
+            {
+                _surfaceFactoryInstance = SurfaceFactory.CreateFromCompositor(_compositor);
+            }
+
             ElementCompositionPreview.SetElementChildVisual(this, Visual);
             SizeChanged +=
                 (sender, args) =>
                 {
                     Visual.Size = new Vector2((float) args.NewSize.Width, (float) args.NewSize.Height);
                 };
+
+            Unloaded += VisualControl_Unloaded;
         }
 
         public Uri ImageUri
@@ -36,28 +47,32 @@ namespace RelativePanelImplicitAnimations
 
         public SpriteVisual Visual { get; }
 
+        private void VisualControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _uriSurface?.Dispose();
+        }
+
         private static void ImageUriChanged(DependencyObject dependencyObject,
             DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var instance = (VisualControl) dependencyObject;
-            var unused = instance.LoadImage(dependencyPropertyChangedEventArgs.NewValue as Uri);
+            var unused = instance.LoadImageAsync(dependencyPropertyChangedEventArgs.NewValue as Uri);
         }
 
-        public async Task LoadImage(Uri imageUri)
+        public async Task LoadImageAsync(Uri imageUri)
         {
-            try
+            if (_uriSurface == null)
             {
-                var sf = SurfaceFactory.CreateFromCompositor(_compositor);
-                var surface = await sf.CreateSurfaceFromUriAsync(imageUri);
-                var brush = _compositor.CreateSurfaceBrush(surface);
-                brush.Stretch = CompositionStretch.Uniform;
-                Visual.Brush = brush;
-                Visual.Size = new Vector2((float) ActualWidth, (float) ActualHeight);
+                _uriSurface = await _surfaceFactoryInstance.CreateUriSurfaceAsync(imageUri);
             }
-            catch (Exception ex)
+            else
             {
-                var m = ex.Message;
+                await _uriSurface.RedrawSurface(imageUri);
             }
+            var brush = _compositor.CreateSurfaceBrush(_uriSurface.Surface);
+            brush.Stretch = CompositionStretch.Uniform;
+            Visual.Brush = brush;
+            Visual.Size = new Vector2((float) ActualWidth, (float) ActualHeight);
         }
     }
 }
