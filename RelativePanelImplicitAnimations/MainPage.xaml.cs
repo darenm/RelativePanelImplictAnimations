@@ -15,45 +15,10 @@ namespace RelativePanelImplicitAnimations
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private ImplicitAnimationCollection _implicitAnimations;
-
         public MainPage()
         {
             Timeline.AllowDependentAnimations = true;
             InitializeComponent();
-            Loaded += MainPage_Loaded;
-        }
-
-
-        private void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            EnsureImplicitAnimations();
-            var elementVisual = ElementCompositionPreview.GetElementVisual(CommentsScrollviewer);
-            elementVisual.ImplicitAnimations = _implicitAnimations;
-            Poster.Visual.ImplicitAnimations = _implicitAnimations;
-        }
-
-        private void EnsureImplicitAnimations()
-        {
-            if (_implicitAnimations == null)
-            {
-                var compositor =
-                    ElementCompositionPreview.GetElementVisual(this).Compositor;
-
-                var offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
-                offsetAnimation.Target = nameof(Visual.Offset);
-                offsetAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
-                offsetAnimation.Duration = TimeSpan.FromMilliseconds(200);
-
-                var sizeAnimation = compositor.CreateVector2KeyFrameAnimation();
-                sizeAnimation.Target = nameof(Visual.Size);
-                sizeAnimation.InsertExpressionKeyFrame(1.0f, "this.FinalValue");
-                sizeAnimation.Duration = TimeSpan.FromMilliseconds(200);
-
-                _implicitAnimations = compositor.CreateImplicitAnimationCollection();
-                _implicitAnimations[nameof(Visual.Offset)] = offsetAnimation;
-                _implicitAnimations[nameof(Visual.Size)] = sizeAnimation;
-            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace RelativePanelImplicitAnimations
             _compositor = ElementCompositionPreview.GetElementVisual(this).Compositor;
             Visual = _compositor.CreateSpriteVisual();
 
-            if (_surfaceFactoryInstance != null)
+            if (_surfaceFactoryInstance == null)
             {
                 _surfaceFactoryInstance = SurfaceFactory.CreateFromCompositor(_compositor);
             }
