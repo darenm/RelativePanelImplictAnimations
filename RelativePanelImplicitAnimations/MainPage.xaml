@@ -17,8 +17,14 @@
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
+                        <Setter Target="ImageDetails.(RelativePanel.RightOf)"
+                                Value="Poster" />
+                        <Setter Target="ImageDetails.(RelativePanel.AlignRightWithPanel)"
+                                Value="True" />
                         <Setter Target="CommentsScrollviewer.(RelativePanel.RightOf)"
                                 Value="Poster" />
+                        <Setter Target="CommentsScrollviewer.(RelativePanel.Below)"
+                                Value="ImageDetails" />
                         <Setter Target="CommentsScrollviewer.(RelativePanel.AlignBottomWithPanel)"
                                 Value="True" />
                     </VisualState.Setters>
@@ -34,6 +40,15 @@
                                 Value="500" />
                         <Setter Target="Poster.(UserControl.Height)"
                                 Value="700" />
+
+                        <Setter Target="ImageDetails.(RelativePanel.Below)"
+                                Value="Poster" />
+                        <Setter Target="ImageDetails.(RelativePanel.AlignRightWith)"
+                                Value="Poster" />
+                        <Setter Target="ImageDetails.(RelativePanel.AlignLeftWithPanel)"
+                                Value="True" />
+                        <Setter Target="ImageDetails.Margin"
+                                Value="12" />
 
                         <Setter Target="CommentsScrollviewer.(RelativePanel.RightOf)"
                                 Value="Poster" />
@@ -55,8 +70,10 @@
                         <Setter Target="Poster.(UserControl.Height)"
                                 Value="300" />
 
-                        <Setter Target="CommentsScrollviewer.(RelativePanel.Below)"
+                        <Setter Target="ImageDetails.(RelativePanel.Below)"
                                 Value="Poster" />
+                        <Setter Target="CommentsScrollviewer.(RelativePanel.Below)"
+                                Value="ImageDetails" />
 
                     </VisualState.Setters>
                 </VisualState>
@@ -71,15 +88,32 @@
                                  x:Name="Poster"
                                  Width="600"
                                  Height="900"
-                                 Margin="12" >
+                                 Margin="12">
                 <Interactivity:Interaction.Behaviors>
-                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300"/>
+                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300" />
                 </Interactivity:Interaction.Behaviors>
             </local:VisualControl>
 
+            <StackPanel x:Name="ImageDetails"
+                        Background="LightBlue">
+                <StackPanel Margin="12">
+                    <TextBlock Style="{StaticResource SubheaderTextBlockStyle}"
+                               Text="This is the Image Title"
+                               Margin="12" />
+                    <TextBlock Style="{StaticResource TitleTextBlockStyle}"
+                               Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+                               Margin="12" />
+                </StackPanel>
+
+                <Interactivity:Interaction.Behaviors>
+                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300" />
+                </Interactivity:Interaction.Behaviors>
+
+            </StackPanel>
+
             <ScrollViewer x:Name="CommentsScrollviewer">
                 <Interactivity:Interaction.Behaviors>
-                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300"/>
+                    <local:SizeAndOffsetImplicitAnimationBehavior DurationMilliSeconds="300" />
                 </Interactivity:Interaction.Behaviors>
                 <StackPanel Background="Azure">
                     <TextBlock x:Name="FirstNameLabel"
